@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale | default "de" }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ site.Title }} – {{ site.Params.tagline }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  <meta name="description" content="{{ .Description | default site.Params.description }}">
+  <meta name="theme-color" content="#f7f3ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151311" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <meta property="og:site_name" content="{{ site.Title }}">
+  <meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}">
+  <meta property="og:description" content="{{ .Description | default site.Params.description }}">
+  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("psaltica-theme");
+        var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.dataset.theme = theme;
+      } catch (error) {}
+    })();
+  </script>
+  {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{ $js := resources.Get "js/main.js" | minify | fingerprint }}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+</head>
+<body data-base="{{ site.Home.RelPermalink }}" class="{{ if .IsHome }}is-home{{ end }}">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="{{ "/" | relURL }}" aria-label="German Psaltica – Notenbibliothek, zur Startseite">
+        <span class="brand__text">
+          <span class="brand__name">German Psaltica</span>
+          <span class="brand__sub">Notenbibliothek</span>
+        </span>
+      </a>
+
+      <nav class="site-nav" aria-label="Hauptnavigation">
+        <a href="{{ "library/" | relURL }}"{{ if or (eq .Section "library") (eq .Type "library") }} aria-current="page"{{ end }}>Bibliothek</a>
+        <a href="{{ "/#bereiche" | relURL }}">Bereiche</a>
+        <a href="{{ "ueber/" | relURL }}"{{ if eq .RelPermalink ("ueber/" | relURL) }} aria-current="page"{{ end }}>Über</a>
+      </nav>
+
+      <div class="site-header__actions">
+        <button class="icon-button" type="button" id="theme-toggle" aria-label="Farbschema wechseln" title="Farbschema wechseln">
+          <span class="icon-button__sun">{{ partial "icon.html" "sun" }}</span>
+          <span class="icon-button__moon">{{ partial "icon.html" "moon" }}</span>
+        </button>
+        <a class="button button--small button--header" href="{{ "library/" | relURL }}">Alle Noten</a>
+
+        <details class="site-menu">
+          <summary class="icon-button site-menu__toggle" aria-label="Menü" title="Menü">
+            <span class="site-menu__open">{{ partial "icon.html" "menu" }}</span>
+            <span class="site-menu__close">{{ partial "icon.html" "close" }}</span>
+          </summary>
+          <nav class="site-menu__panel" aria-label="Hauptnavigation">
+            <a href="{{ "library/" | relURL }}"{{ if or (eq .Section "library") (eq .Type "library") }} aria-current="page"{{ end }}>Bibliothek</a>
+            <a href="{{ "/#bereiche" | relURL }}">Bereiche</a>
+            <a href="{{ "ueber/" | relURL }}"{{ if eq .RelPermalink ("ueber/" | relURL) }} aria-current="page"{{ end }}>Über</a>
+          </nav>
+        </details>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a class="brand brand--footer" href="{{ "/" | relURL }}">
+            <span class="brand__text">
+              <span class="brand__name">German Psaltica</span>
+              <span class="brand__sub">Notenbibliothek</span>
+            </span>
+          </a>
+          <p>{{ site.Params.description }}</p>
+        </div>
+
+        <div class="footer__links">
+          <h2>Bereiche</h2>
+          <ul>
+            {{ range first 5 hugo.Data.library.categories }}
+            <li><a href="{{ .url | relURL }}">{{ .name }}</a></li>
+            {{ end }}
+            <li><a href="{{ "library/" | relURL }}">Alle Noten</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__note">
+          <h2>Hinweis</h2>
+          <p>{{ site.Params.footerNote }} Mehr dazu in den <a href="{{ "ueber/" | relURL }}#rechte-und-nutzung">Nutzungshinweisen</a>.</p>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© {{ now.Year }} German Psaltica</p>
+        <p>{{ hugo.Data.library.total }} Noten · {{ hugo.Data.library.totalPagesLabel }} Seiten · mit Hugo erstellt</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

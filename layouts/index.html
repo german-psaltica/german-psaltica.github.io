@@ -1,0 +1,95 @@
+{{ define "main" }}
+{{ $data := hugo.Data.library }}
+<section class="hero">
+  <div class="container hero__inner">
+    <p class="eyebrow">Notenbibliothek · Byzantinische Kirchenmusik</p>
+    <h1>German<br>Psaltica</h1>
+    <p class="hero__lead">PDF-Noten für Liturgie, Orthros, Vesper und die Feste des orthodoxen Kirchenjahres – gesammelt, geordnet und direkt im Browser lesbar.</p>
+
+    <form class="hero__search" action="{{ "library/" | relURL }}" method="get" role="search">
+      <label class="sr-only" for="home-search">Noten durchsuchen</label>
+      <span class="hero__search-icon">{{ partial "icon.html" "search" }}</span>
+      <input id="home-search" name="q" type="search" placeholder="Titel, Fest, Komponist oder Modus suchen …" autocomplete="off" spellcheck="false">
+      <button type="submit">Suchen</button>
+    </form>
+
+    <div class="hero__stats" aria-label="Bibliotheksumfang">
+      <span><strong>{{ $data.total }}</strong> Noten</span>
+      <span><strong>{{ len $data.categories }}</strong> Bereiche</span>
+      <span><strong>{{ $data.totalPagesLabel }}</strong> Seiten</span>
+    </div>
+  </div>
+  <div class="hero__ornament" aria-hidden="true">Ψ</div>
+</section>
+
+<section class="section container" id="bereiche">
+  <div class="section__head">
+    <div>
+      <p class="eyebrow">Nach Gottesdienst und Gattung</p>
+      <h2>Die Bibliothek</h2>
+    </div>
+    <p class="section__intro">Von der vollständigen Liturgie bis zum einzelnen Kondakion – jeder Bereich führt übersichtlich zu den passenden PDFs.</p>
+  </div>
+
+  <div class="category-grid">
+    {{ range $data.categories }}
+      {{ partial "category-tile.html" (dict
+        "title" .name
+        "url" .url
+        "count" .count
+        "description" .description
+        "icon" .icon
+        "accent" .accent
+      ) }}
+    {{ end }}
+  </div>
+
+  <div class="mode-strip">
+    <span class="mode-strip__label">Direkt nach Modus</span>
+    <div class="mode-strip__links">
+      {{ range seq 1 8 }}
+      <a href="{{ printf "library/?mode=%d" . | relURL }}">{{ . }}. Modus</a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{ $all := where site.RegularPages "Type" "library" }}
+{{ $public := slice }}
+{{ range $all }}
+  {{ if not .Params.archive }}{{ $public = $public | append . }}{{ end }}
+{{ end }}
+{{ $latest := first 6 (sort $public "Params.created" "desc") }}
+{{ with $latest }}
+<section class="section section--alt">
+  <div class="container">
+    <div class="section__head">
+      <div>
+        <p class="eyebrow">Neu in der Sammlung</p>
+        <h2>Neueste Ausgaben</h2>
+      </div>
+      <a class="text-link" href="{{ "library/" | relURL }}">Alle Noten ansehen {{ partial "icon.html" "arrow-right" }}</a>
+    </div>
+    <div class="doc-grid doc-grid--home">
+      {{ range . }}
+        {{ partial "doc-card.html" . }}
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+<section class="section container">
+  <div class="cta">
+    <div class="cta__copy">
+      <p class="eyebrow">Alles an einem Ort</p>
+      <h2>Die richtige Note finden.</h2>
+      <p>Durchsuche alle {{ $data.total }} PDFs nach Titel, Fest, Komponist oder Modus. Filtere nach Bereich, blendet das Archiv ein und öffne jede Note direkt in der Vorschau.</p>
+    </div>
+    <div class="cta__actions">
+      <a class="button button--large" href="{{ "library/" | relURL }}">{{ partial "icon.html" "search" }} Bibliothek durchsuchen</a>
+      <a class="button button--ghost button--large" href="{{ "ueber/" | relURL }}">Mehr über die Sammlung</a>
+    </div>
+  </div>
+</section>
+{{ end }}

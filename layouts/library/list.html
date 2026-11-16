@@ -1,0 +1,166 @@
+{{ define "main" }}
+{{ if eq .Params.kind "root" }}
+{{ $docs := .RegularPagesRecursive }}
+<div class="container page">
+  {{ partial "breadcrumb.html" . }}
+
+  <header class="page-head page-head--library">
+    <p class="eyebrow">Alle Bereiche · {{ hugo.Data.library.total }} PDFs</p>
+    <h1>Notenbibliothek</h1>
+    <p class="page-head__lead">Durchsuche die gesamte Sammlung nach Titel, Fest, Komponist oder Modus. Das Archiv bleibt standardmäßig ausgeblendet.</p>
+  </header>
+
+  <div class="catalog-toolbar" id="catalog-toolbar">
+    <div class="catalog-toolbar__row">
+      <label class="search-field">
+        {{ partial "icon.html" "search" }}
+        <span class="sr-only">Noten durchsuchen</span>
+        <input id="library-search" type="search" placeholder="Titel, Fest, Komponist, Modus …" autocomplete="off" spellcheck="false">
+      </label>
+
+      <label class="select-field">
+        <span class="sr-only">Bereich</span>
+        <select id="filter-category">
+          <option value="">Alle Bereiche</option>
+          {{ range hugo.Data.library.categories }}
+          <option value="{{ .key }}">{{ .name }} ({{ .count }})</option>
+          {{ end }}
+        </select>
+      </label>
+
+      <label class="select-field">
+        <span class="sr-only">Modus</span>
+        <select id="filter-mode">
+          <option value="">Alle Modi</option>
+          {{ range seq 1 8 }}
+          <option value="{{ . }}">{{ . }}. Modus</option>
+          {{ end }}
+          <option value="none">Ohne Modusangabe</option>
+        </select>
+      </label>
+
+      <label class="select-field select-field--sort">
+        <span class="sr-only">Sortierung</span>
+        <select id="filter-sort">
+          <option value="title">Titel A–Z</option>
+          <option value="newest">Neueste zuerst</option>
+          <option value="oldest">Älteste zuerst</option>
+          <option value="pages">Meiste Seiten</option>
+          <option value="size">Größte Datei</option>
+        </select>
+      </label>
+
+      <label class="checkbox-field">
+        <input type="checkbox" id="filter-archive">
+        <span>Archiv einbeziehen</span>
+      </label>
+
+      <button type="button" class="button button--ghost button--small" id="library-reset">Zurücksetzen</button>
+    </div>
+
+    <div class="catalog-toolbar__status">
+      <p id="library-count" aria-live="polite">{{ len $docs }} Noten</p>
+      <p id="library-filter-summary" class="catalog-toolbar__summary" hidden></p>
+    </div>
+  </div>
+
+  <div class="doc-grid" id="library-grid">
+    {{ range $docs.ByTitle }}
+      {{ partial "doc-card.html" . }}
+    {{ end }}
+  </div>
+
+  <div class="empty-state" id="library-empty" hidden>
+    <span class="empty-state__icon">{{ partial "icon.html" "search" }}</span>
+    <h2>Keine Noten gefunden</h2>
+    <p>Versuche es mit einem anderen Suchbegriff oder setze die Filter zurück.</p>
+    <button type="button" class="button" id="library-empty-reset">Filter zurücksetzen</button>
+  </div>
+</div>
+
+{{ else }}
+
+{{ $recursive := .RegularPagesRecursive }}
+{{ $direct := .RegularPages }}
+{{ $children := .Sections }}
+{{ $hasArchive := gt (len (where $recursive "Params.archive" true)) 0 }}
+{{ $accent := .Params.accent | default "#7a2e2e" }}
+<div class="container page">
+  {{ partial "breadcrumb.html" . }}
+
+  <header class="page-head page-head--section" style="--accent: {{ $accent }};">
+    <p class="eyebrow">{{ with .Params.categoryName }}{{ . }}{{ else }}Bereich{{ end }}</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<p class="page-head__lead">{{ . }}</p>{{ end }}
+    <div class="page-head__meta">
+      <span>{{ len $recursive }} {{ if eq (len $recursive) 1 }}Note{{ else }}Noten{{ end }}</span>
+      {{ if .Params.archive }}<span class="badge badge--archive">Archivbereich</span>{{ end }}
+      {{ with .Params.sectionKey }}<span class="page-head__path">{{ . }}</span>{{ end }}
+    </div>
+  </header>
+
+  {{ with .Params.notice }}
+  <aside class="notice">
+    <span class="notice__icon">{{ partial "icon.html" "file" }}</span>
+    <div>
+      <h2>Hinweis zum Bereich</h2>
+      <p>{{ . }}</p>
+    </div>
+  </aside>
+  {{ end }}
+
+  {{ if $children }}
+  <section class="section section--children">
+    <div class="section__head section__head--compact">
+      <div>
+        <p class="eyebrow">Weiter stöbern</p>
+        <h2>Unterbereiche</h2>
+      </div>
+    </div>
+    <div class="category-grid category-grid--compact">
+      {{ range $children }}
+        {{ partial "category-tile.html" (dict
+          "title" .Title
+          "url" .RelPermalink
+          "count" (len .RegularPagesRecursive)
+          "description" .Params.description
+          "icon" (.Params.icon | default "folder")
+          "accent" (.Params.accent | default $accent)
+          "compact" true
+        ) }}
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ if $direct }}
+  <section class="section section--docs">
+    <div class="section__head section__head--compact">
+      <div>
+        <p class="eyebrow">Direkt in diesem Bereich</p>
+        <h2>Noten</h2>
+      </div>
+      {{ if gt (len $recursive) (len $direct) }}
+      {{ $qs := querify "section" .Params.sectionKey "sectionName" .Title "category" .Params.category }}
+      {{ if $hasArchive }}{{ $qs = printf "%s&archive=1" $qs }}{{ end }}
+      <a class="text-link" href="{{ printf "library/?%s" $qs | relURL }}">Alle {{ len $recursive }} Noten anzeigen {{ partial "icon.html" "arrow-right" }}</a>
+      {{ end }}
+    </div>
+    <div class="doc-grid">
+      {{ range $direct.ByTitle }}
+        {{ partial "doc-card.html" . }}
+      {{ end }}
+    </div>
+  </section>
+  {{ else }}
+  {{ if gt (len $recursive) 0 }}
+  <div class="section-action">
+    {{ $qs := querify "section" .Params.sectionKey "sectionName" .Title "category" .Params.category }}
+    {{ if $hasArchive }}{{ $qs = printf "%s&archive=1" $qs }}{{ end }}
+    <a class="button" href="{{ printf "library/?%s" $qs | relURL }}">Alle {{ len $recursive }} Noten in diesem Bereich anzeigen {{ partial "icon.html" "arrow-right" }}</a>
+  </div>
+  {{ end }}
+  {{ end }}
+</div>
+{{ end }}
+{{ end }}

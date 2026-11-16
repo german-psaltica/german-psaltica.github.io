@@ -1,0 +1,16 @@
+{{- $title := .title -}}
+{{- $url := .url -}}
+{{- $count := .count | default 0 -}}
+{{- $description := .description | default "" -}}
+{{- $icon := .icon | default "folder" -}}
+{{- $accent := .accent | default "#7a2e2e" -}}
+{{- $compact := .compact | default false -}}
+<a class="category-tile{{ if $compact }} category-tile--compact{{ end }}" href="{{ $url | relURL }}" style="--accent: {{ $accent }};">
+  <span class="category-tile__icon">{{ partial "icon.html" $icon }}</span>
+  <span class="category-tile__body">
+    <span class="category-tile__title">{{ $title }}</span>
+    {{ if and (not $compact) $description }}<span class="category-tile__desc">{{ $description }}</span>{{ end }}
+    <span class="category-tile__count">{{ $count }} {{ if eq $count 1 }}Note{{ else }}Noten{{ end }}</span>
+  </span>
+  <span class="category-tile__arrow" aria-hidden="true">{{ partial "icon.html" "arrow-right" }}</span>
+</a>

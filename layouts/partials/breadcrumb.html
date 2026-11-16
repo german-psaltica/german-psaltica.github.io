@@ -1,0 +1,11 @@
+<nav class="breadcrumb" aria-label="Brotkrumen">
+  <ol>
+    <li><a href="{{ "/" | relURL }}">Start</a></li>
+    {{ range .Ancestors.Reverse }}
+      {{ if not .IsHome }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{ end }}
+    {{ end }}
+    <li aria-current="page">{{ .Title }}</li>
+  </ol>
+</nav>

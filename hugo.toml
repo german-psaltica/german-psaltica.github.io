@@ -1,0 +1,35 @@
+baseURL = "https://example.org/"
+locale = "de-DE"
+defaultContentLanguage = "de"
+title = "German Psaltica"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term", "RSS"]
+timeZone = "Europe/Vienna"
+
+[params]
+  tagline = "Notenbibliothek für byzantinische Kirchenmusik in deutscher Sprache"
+  description = "Durchsuchbare Notenbibliothek mit PDFs für Liturgie, Orthros, Vesper, Troparien, Kondakien und die Feste des orthodoxen Kirchenjahres."
+  footerNote = "Die Rechte an den Noten liegen bei den jeweiligen Urheberinnen und Urhebern."
+
+[module]
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+  [[module.mounts]]
+    source = "data"
+    target = "data"
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "GermanPsaltica"
+    target = "static/library"
+
+[markup.goldmark.renderer]
+  unsafe = true

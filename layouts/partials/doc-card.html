@@ -1,0 +1,39 @@
+{{- $archive := .Params.archive -}}
+<article class="doc-card{{ if $archive }} is-archive{{ end }}"
+  data-search="{{ .Params.search }}"
+  data-category="{{ .Params.category }}"
+  data-section="{{ .Params.sectionKey }}"
+  data-mode="{{ with .Params.mode }}{{ . }}{{ end }}"
+  data-archive="{{ if $archive }}true{{ else }}false{{ end }}"
+  data-title="{{ .Title }}"
+  data-pages="{{ .Params.pages | default 0 }}"
+  data-created="{{ .Params.created }}"
+  data-size="{{ .Params.sizeBytes | default 0 }}">
+  <a class="doc-card__main" href="{{ .RelPermalink }}">
+    <span class="doc-card__media">
+      {{ with .Params.thumb }}
+      <img src="{{ . | relURL }}" alt="" loading="lazy" decoding="async">
+      {{ else }}
+      <span class="doc-card__placeholder">{{ partial "icon.html" "file" }}<span>PDF</span></span>
+      {{ end }}
+      {{ with .Params.modeLabel }}<span class="doc-card__badges doc-card__badges--top"><span class="badge badge--mode">{{ . }}</span></span>{{ end }}
+      {{ if or $archive .Params.status }}
+      <span class="doc-card__badges doc-card__badges--bottom">
+        {{ if $archive }}<span class="badge badge--archive">Archiv</span>{{ end }}
+        {{ with .Params.status }}<span class="badge badge--status">{{ . }}</span>{{ end }}
+      </span>
+      {{ end }}
+    </span>
+    <span class="doc-card__body">
+      <span class="doc-card__title">{{ .Title }}</span>
+      <span class="doc-card__context">{{ .Params.sectionLabel }}</span>
+      <span class="doc-card__meta">
+        {{ with .Params.pages }}{{ . }} {{ if eq . 1 }}Seite{{ else }}Seiten{{ end }}{{ else }}PDF{{ end }}
+        <span aria-hidden="true">·</span> {{ .Params.sizeLabel }}
+      </span>
+    </span>
+  </a>
+  <a class="doc-card__pdf" href="{{ .Params.pdf | relURL }}" target="_blank" rel="noopener" aria-label="PDF in neuem Tab öffnen">
+    <span>PDF</span>{{ partial "icon.html" "external" }}
+  </a>
+</article>

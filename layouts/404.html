@@ -1,0 +1,14 @@
+{{ define "main" }}
+<div class="container page">
+  <header class="page-head page-head--library">
+    <p class="eyebrow">Fehler 404</p>
+    <h1>Seite nicht gefunden</h1>
+    <p class="page-head__lead">Die aufgerufene Seite existiert nicht oder wurde verschoben. Durchsuche stattdessen die Notenbibliothek nach Titel, Fest, Komponist oder Modus.</p>
+  </header>
+
+  <div class="section-action section-action--buttons">
+    <a class="button" href="{{ "library/" | relURL }}">{{ partial "icon.html" "search" }} Zur Notenbibliothek</a>
+    <a class="button button--ghost" href="{{ "/" | relURL }}">Zur Startseite</a>
+  </div>
+</div>
+{{ end }}
