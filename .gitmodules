@@ -1,0 +1,4 @@
+[submodule "notations"]
+	path = notations
+	url = git@github.com:german-psaltica/notations.git
+	branch = master
