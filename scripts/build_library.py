@@ -2,7 +2,7 @@
 """
 Build the data layer for the German Psaltica Hugo site.
 
-The script scans GermanPsaltica/, extracts useful metadata from every PDF,
+The script scans notations/, extracts useful metadata from every PDF,
 renders first-page previews into static/thumbs/ and generates:
 
   data/library.json                 catalog data for the landing page
@@ -38,11 +38,11 @@ from typing import Any
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "GermanPsaltica"
+SOURCE = ROOT / "notations"
 CONTENT_LIBRARY = ROOT / "content" / "library"
 DATA_DIR = ROOT / "data"
 DATA_FILE = DATA_DIR / "library.json"
-CATEGORIES_FILE = DATA_DIR / "categories.json"
+CATEGORIES_FILE = ROOT / "categories.json"
 THUMBS_DIR = ROOT / "static" / "thumbs"
 
 THUMB_SIZE = 640

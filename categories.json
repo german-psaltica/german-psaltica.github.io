@@ -1,0 +1,42 @@
+{
+  "01_Liturgie": {
+    "description": "Noten zur Göttlichen Liturgie – von den Festteilen und dem Einzug über Trisagion, Cherubikon und Liturgika bis zur Kommunion.",
+    "icon": "chalice",
+    "accent": "#8a3b34"
+  },
+  "02_Troparien": {
+    "description": "Troparien für die Feste des Herrn und der Gottesgebärerin, für Heilige und für die Sonntage der Auferstehung.",
+    "icon": "book",
+    "accent": "#9a6a2f"
+  },
+  "03_Kondakien": {
+    "description": "Kondakien zu Festen und Heiligen – kurze, prägnante Gesänge für den Gottesdienst.",
+    "icon": "scroll",
+    "accent": "#7b5a3c"
+  },
+  "04_Morgenlob": {
+    "description": "Orthros, Doxologien, Kanons und Katavasien – dazu das Orthros-Projekt 2024.",
+    "icon": "sun",
+    "accent": "#b06a2c"
+  },
+  "05_Vesper": {
+    "description": "Noten für den Abendgottesdienst: Prokeimena, „Herr, ich rufe zu dir“, „Heiteres Licht“ und weitere Gesänge.",
+    "icon": "sunset",
+    "accent": "#6d4b7a"
+  },
+  "06_Psalmen": {
+    "description": "Psalmvertonungen und Entwürfe für den gottesdienstlichen Gebrauch.",
+    "icon": "music",
+    "accent": "#4f6b56"
+  },
+  "07_Andere Gottesdienste": {
+    "description": "Priesterweihe, Totengedenken, Wasserweihe, Hochzeit und weitere Gottesdienste.",
+    "icon": "church",
+    "accent": "#4f6577"
+  },
+  "08_Pas'cha": {
+    "description": "Österliche Noten: Troparion, Trisagion, 9. Ode, Doxastikon und Kinonikon für die Pas'cha-Zeit.",
+    "icon": "candle",
+    "accent": "#a53f3f"
+  }
+}

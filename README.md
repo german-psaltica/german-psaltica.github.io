@@ -1,106 +1,37 @@
 # German Psaltica
 
-Statische Hugo-Website für die Notenbibliothek **German Psaltica**: 440 PDFs mit
-byzantinischer Kirchenmusik in deutscher Sprache, durchsuchbar nach Titel, Fest,
-Komponist, Bereich und Modus.
+Statische Hugo-Website für die Notenbibliothek German Psaltica: byzantinische Kirchenmusik in deutscher Sprache.
 
-Die Website bietet:
-
-- eine durchsuch- und filterbare Gesamtbibliothek,
-- nach Ordnern gegliederte Bereichsseiten,
-- eine Detailseite pro PDF mit Vorschau, Download und Metadaten,
-- automatisch erzeugte Vorschaubilder der ersten Seite,
-- ein standardmäßig ausgeblendetes Archiv,
-- helles und dunkles Farbschema sowie eine mobile Ansicht.
-
-## Aufbau
-
-| Pfad | Inhalt |
-| --- | --- |
-| `GermanPsaltica/` | Unveränderte Quell-PDFs (256 MB) |
-| `scripts/build_library.py` | Scannt die PDFs und erzeugt Daten, Seiten und Vorschauen |
-| `data/library.json` | Generierter Katalog (Metadaten aller Noten) |
-| `data/categories.json` | Redaktionelle Beschreibungen, Icons und Akzentfarben der Bereiche |
-| `content/library/` | Generierte Bereichs- und Detailseiten |
-| `static/thumbs/` | Generierte Vorschaubilder (JPEG) |
-| `layouts/`, `assets/` | Templates, CSS und JavaScript |
-| `public/` | Build-Ausgabe (nicht bearbeiten) |
-
-Die PDFs werden über einen Hugo-Modul-Mount aus `GermanPsaltica/` unter
-`/library/` ausgeliefert. Sie werden also nicht kopiert oder verändert.
+Die PDFs liegen im Submodul `notations/` und werden unverändert unter `/library/` ausgeliefert. `scripts/build_library.py` erzeugt daraus Katalog, Seiten und Vorschaubilder. Bereichstexte und Kacheln stehen in `categories.json`. Generierte Dateien (`content/library/`, `data/library.json`, `static/thumbs/`, `public/`) werden nicht versioniert.
 
 ## Voraussetzungen
 
-- Hugo Extended **0.158 oder neuer**
-- Python **3.10 oder neuer**
-- `poppler-utils` mit `pdfinfo` und `pdftoppm`
-- optional: `make`
-
-Unter Debian/Ubuntu:
+Hugo Extended 0.169 oder neuer, Python 3.10 oder neuer, `poppler-utils`.
 
 ```sh
 sudo apt install hugo poppler-utils python3
+git submodule update --init
 ```
 
-## Schnellstart
+## Lokal
 
 ```sh
-make build     # Daten erzeugen und Website nach public/ bauen
-make serve     # Entwicklungsserver auf http://127.0.0.1:1414/
+make serve     # http://127.0.0.1:1414/
+make build     # Produktionsbuild nach public/
 ```
 
-Ohne `make`:
-
-```sh
-python3 scripts/build_library.py --jobs 6
-hugo server --bind 127.0.0.1 --port 1414
-```
-
-Für einen Produktionsbuild:
-
-```sh
-python3 scripts/build_library.py --jobs 6
-hugo --minify --cleanDestinationDir
-```
-
-## Noten hinzufügen oder ändern
-
-1. PDF unter `GermanPsaltica/` ablegen, umbenennen oder entfernen.
-2. `python3 scripts/build_library.py --jobs 6` ausführen.
-3. `hugo --minify` neu bauen.
-
-Das Skript ist idempotent. Vorschaubilder werden nur neu erzeugt, wenn das
-zugehörige PDF neuer ist als das Bild. Weitere Optionen:
-
-```sh
-python3 scripts/build_library.py --no-thumbs      # ohne Vorschauen (schnell)
-python3 scripts/build_library.py --force-thumbs   # alle Vorschauen neu
-python3 scripts/build_library.py --jobs 8         # mehr parallele Prozesse
-```
-
-Ordner mit den Namen `archiv`, `archive`, `alt`, `Vorübergehende Versionen`
-sowie Ordner, die mit `99_` beginnen, gelten automatisch als Archiv. Ihre Noten
-sind im Katalog standardmäßig ausgeblendet und lassen sich über
-„Archiv einbeziehen“ einblenden.
-
-Titel, Modus, Datum, Seitenzahl und Dateigröße werden aus Dateiname und
-PDF-Metadaten abgeleitet. Bereichsbeschreibungen und Gestaltung der
-Kategoriekacheln stehen in `data/categories.json`.
+Neue oder geänderte PDFs unter `notations/` ablegen und `make build` erneut ausführen. Ordner namens `archiv`, `archive`, `alt`, `Vorübergehende Versionen` und Ordner mit Präfix `99_` gelten als Archiv und sind standardmäßig ausgeblendet.
 
 ## Veröffentlichen
 
-`public/` enthält eine vollständig statische Website und kann auf jedem
-Webserver oder Static-Host ausgeliefert werden. Vor dem Veröffentlichen die
-`baseURL` in `hugo.toml` auf die endgültige Adresse setzen.
+Jeder Push auf `master` baut die Website und veröffentlicht sie unter [https://german-psaltica.github.io/website/](https://german-psaltica.github.io/website/).
 
-Wichtig: Beim Build müssen sowohl `GermanPsaltica/` als auch die generierten
-Dateien vorhanden sein, weil die PDFs per Modul-Mount eingebunden werden. Für
-einen reinen Hugo-Build ohne Python muss `content/library/`, `data/library.json`
-und `static/thumbs/` mit ausgeliefert bzw. versioniert werden.
+Einmalig:
+
+1. **Settings → Pages → Source: GitHub Actions.**
+2. Für eine öffentliche Website das Repository `website` öffentlich machen, oder GitHub Pro, Team bzw. Enterprise nutzen.
+3. Fine-grained PAT mit **Contents: Read** auf `german-psaltica/notations` und `german-psaltica/website` als Secret `NOTATIONS_READ_TOKEN` hinterlegen.
 
 ## Rechte
 
-Die Rechte an den Noten liegen bei den jeweiligen Urheberinnen und Urhebern.
-Die Website stellt die PDFs ausschließlich zur Einsicht und zum Studium bereit.
-Vor einer weiteren Veröffentlichung oder Aufführung sind die Rechteinhaber zu
-kontaktieren. Weitere Hinweise stehen auf der Seite `/ueber/`.
+Die Rechte an den Noten liegen bei den jeweiligen Urheberinnen und Urhebern. Die Website stellt die PDFs zur Einsicht und zum Studium bereit. Weitere Hinweise stehen auf `/ueber/`.

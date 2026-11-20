@@ -1,4 +1,4 @@
-baseURL = "https://example.org/"
+baseURL = "https://german-psaltica.github.io/website/"
 locale = "de-DE"
 defaultContentLanguage = "de"
 title = "German Psaltica"
@@ -28,7 +28,7 @@ timeZone = "Europe/Vienna"
     source = "static"
     target = "static"
   [[module.mounts]]
-    source = "GermanPsaltica"
+    source = "notations"
     target = "static/library"
 
 [markup.goldmark.renderer]
