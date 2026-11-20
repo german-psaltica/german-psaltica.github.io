@@ -1,4 +1,4 @@
-baseURL = "https://german-psaltica.github.io/website/"
+baseURL = "https://german-psaltica.github.io/"
 locale = "de-DE"
 defaultContentLanguage = "de"
 title = "German Psaltica"

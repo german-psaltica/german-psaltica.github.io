@@ -24,13 +24,13 @@ Neue oder geänderte PDFs unter `notations/` ablegen und `make build` erneut aus
 
 ## Veröffentlichen
 
-Jeder Push auf `master` baut die Website und veröffentlicht sie unter [https://german-psaltica.github.io/website/](https://german-psaltica.github.io/website/).
+Jeder Push auf `master` baut die Website und veröffentlicht sie unter [https://german-psaltica.github.io/](https://german-psaltica.github.io/).
 
 Einmalig:
 
 1. **Settings → Pages → Source: GitHub Actions.**
 2. Für eine öffentliche Website das Repository `website` öffentlich machen, oder GitHub Pro, Team bzw. Enterprise nutzen.
-3. Fine-grained PAT mit **Contents: Read** auf `german-psaltica/notations` und `german-psaltica/website` als Secret `NOTATIONS_READ_TOKEN` hinterlegen.
+3. Fine-grained PAT mit **Contents: Read** auf `german-psaltica/notations` und `german-psaltica/german-psaltica.github.io` als Secret `NOTATIONS_READ_TOKEN` hinterlegen.
 
 ## Rechte
 
